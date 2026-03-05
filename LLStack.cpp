@@ -6,7 +6,8 @@
 	// so be sure that the "next" Node is linked to a nullptr
 Node::Node(string s) 
 {
-
+	data = s;
+	next = nullptr;
 }
 
 //constructor : initiazlize the head and tail field from LLStack class 
@@ -14,7 +15,9 @@ Node::Node(string s)
 	// the head and tail should both be initialized as null pointers
 LLStack::LLStack()
 {
-
+	head = nullptr;
+	tail = nullptr;
+	count = 0;
 }
 
 /*
@@ -24,7 +27,10 @@ LLStack::LLStack()
 */
 string LLStack::top()
 {
-	return "fixthis";
+	if(size() == 0){
+		return "";
+	}
+	return head->data;
 }
 
 /*
@@ -32,7 +38,7 @@ string LLStack::top()
 */
 int LLStack::size()
 {
-	return -1;
+	return count;
 }
 
 /*
@@ -45,7 +51,10 @@ int LLStack::size()
 */
 void LLStack::push(string s)
 {
-
+	Node* newNode = new Node(s);
+	newNode->next = head;
+	head = newNode;
+	++count;
 }
 
 /*
@@ -57,7 +66,14 @@ void LLStack::push(string s)
 */
 void LLStack::pop()
 {
-
+	if(count == 0){
+		cout << "Stack Is Empty" << endl;
+		return;
+	}	
+	Node *temp = head;
+	head = head->next;
+	delete temp;
+	--count;
 }
 
 /*
@@ -74,7 +90,7 @@ void LLStack::pop()
       If so, make sure tail is also set to nullptr.
     - Use a counter variable (such as 'removed') to track how many were deleted.
     - Be careful not to lose your place when deleting nodes:
-        * Save curr->next in a temporary pointer before deleting curr.
+        * Save present->next in a temporary pointer before deleting present.
     - Handle edge cases:
         * Stack is empty (no nodes to remove)
         * Target not found (return 0)
@@ -82,6 +98,33 @@ void LLStack::pop()
 */
 int LLStack::removeAll(const string& target) 
 {
-	return -1;
+	int removed = 0;
+	if (count == 0){
+		cout << "Stack is empty, no nodes containing " << target << "." << endl;
+		tail = nullptr;
+		return 0;
+	}
+	
+	Node* present = head;
+    Node* prevoius = nullptr;
+    while (present != nullptr) {
+        if (present->data == target){
+            Node* temp = present;
+            present = present->next;
+            if (prevoius == nullptr) {
+                head = present;
+            } else {
+                prevoius->next = present;
+            }
+            delete temp;
+            ++removed;
+            --count;
+        }
+        else {
+            prevoius = present;
+            present = present->next;
+        }
+    }
+	return removed;
 }
 
